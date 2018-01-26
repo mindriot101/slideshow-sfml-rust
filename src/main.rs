@@ -58,13 +58,15 @@ fn main() {
 
     /* Create slideshow */
     let mut slideshow = Slideshow::new();
-    slideshow.add(Slide::blank().add_text(TextDescription {
-        text: "Hello world".to_string(),
-        font: &fonts["sansation"],
-        size: 84,
-        position: (0.5, 0.5),
-        shader: None,
-    }));
+    slideshow.add(
+        Slide::with_background(Color::RED).add_text(TextDescription {
+            text: "Hello world".to_string(),
+            font: &fonts["sansation"],
+            size: 84,
+            position: (0.5, 0.5),
+            shader: None,
+        }),
+    );
     slideshow.add(Slide::blank().add_text(TextDescription {
         text: "Second slide".to_string(),
         font: &fonts["sansation"],
@@ -142,7 +144,6 @@ fn main() {
                 slide.update(dt.as_seconds(), window.size());
 
                 /* Render the current slide */
-                window.clear(&Color::BLACK);
                 slide.draw(&mut window);
                 window.display();
             }
