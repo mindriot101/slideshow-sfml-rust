@@ -3,7 +3,7 @@ extern crate sfml;
 use std::collections::HashMap;
 use sfml::system::Clock;
 use sfml::graphics::{Color, Font, RenderTarget, RenderWindow, Text, Transformable};
-use sfml::window::{Event, Key, Style};
+use sfml::window::{Event, Key, Style, VideoMode};
 
 pub(crate) mod traits;
 pub(crate) mod slideshow;
@@ -32,6 +32,7 @@ fn main() {
     let resolution = (1280, 720);
 
     /* Create the render window */
+    let mut fullscreen = false;
     let mut window = RenderWindow::new(
         resolution,
         "Borrowed resources",
@@ -55,6 +56,24 @@ fn main() {
                 | Event::KeyPressed {
                     code: Key::Escape, ..
                 } => return,
+                Event::KeyPressed { code: Key::F, .. } => {
+                    fullscreen = !fullscreen;
+                    let (new_mode, new_style) = if fullscreen {
+                        let new_mode = VideoMode::desktop_mode();
+                        let new_style = Style::CLOSE | Style::FULLSCREEN;
+                        ((new_mode.width, new_mode.height), new_style)
+                    } else {
+                        let new_style = Style::CLOSE;
+                        (resolution, new_style)
+                    };
+
+                    window = RenderWindow::new(
+                        new_mode,
+                        "Borrowed resources",
+                        new_style,
+                        &Default::default(),
+                    );
+                }
                 _ => {}
             }
         }
