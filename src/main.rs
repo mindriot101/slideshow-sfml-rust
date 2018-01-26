@@ -2,7 +2,8 @@ extern crate sfml;
 
 use std::collections::HashMap;
 use sfml::system::Clock;
-use sfml::graphics::{Color, Font, RenderTarget, RenderWindow, Shader, Text, Transformable};
+use sfml::graphics::{Color, Font, RenderTarget, RenderWindow, Shader, Sprite, Text, Texture,
+                     Transformable};
 use sfml::window::{Event, Key, Style, VideoMode};
 
 pub(crate) mod traits;
@@ -14,9 +15,16 @@ pub(crate) mod description;
 use traits::{OriginReset, Renderable, Updateable};
 use slideshow::Slideshow;
 use slide::Slide;
-use description::TextDescription;
+use description::{ImageDescription, TextDescription};
 
 impl<'font> OriginReset for Text<'font> {
+    fn reset_origin(&mut self) {
+        let rect = self.global_bounds();
+        self.set_origin((rect.width * 0.5, rect.height * 0.5));
+    }
+}
+
+impl<'s> OriginReset for Sprite<'s> {
     fn reset_origin(&mut self) {
         let rect = self.global_bounds();
         self.set_origin((rect.width * 0.5, rect.height * 0.5));
@@ -32,6 +40,9 @@ fn main() {
     );
     let green_shader = Shader::from_file(None, None, Some("run_tree/shaders/green.glslf"))
         .expect("loading green shader");
+
+    let texture = Texture::from_file("run_tree/images/frank.jpeg").unwrap();
+    let sprite = Sprite::with_texture(&texture);
 
     let resolution = (1280, 720);
 
@@ -52,9 +63,20 @@ fn main() {
         font: &fonts["sansation"],
         size: 84,
         position: (0.5, 0.5),
+        shader: None,
+    }));
+    slideshow.add(Slide::blank().add_text(TextDescription {
+        text: "Second slide".to_string(),
+        font: &fonts["sansation"],
+        size: 26,
+        position: (0.3, 0.5),
+        shader: None,
+    }));
+    slideshow.add(Slide::blank().add_image(ImageDescription {
+        sprite: sprite,
+        position: (0.5, 0.5),
         shader: Some(&green_shader),
     }));
-    // slideshow.add(Slide::blank().add_text("Second slide", &fonts["sansation"], 84, (0.3, 0.5)));
     let n_slides = slideshow.len();
 
     let mut clock = Clock::start();

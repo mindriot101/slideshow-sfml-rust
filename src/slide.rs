@@ -1,15 +1,15 @@
 use component::Component;
 
 use traits::{Renderable, Updateable};
-use description::TextDescription;
-use sfml::graphics::{Font, RenderTarget, Shader};
+use description::{ImageDescription, TextDescription};
+use sfml::graphics::RenderTarget;
 use sfml::system::Vector2u;
 
-pub(crate) struct Slide<'font, 'texture> {
-    components: Vec<Component<'font, 'texture>>,
+pub(crate) struct Slide<'font, 's, 'texture> {
+    components: Vec<Component<'font, 's, 'texture>>,
 }
 
-impl<'font, 'texture> Slide<'font, 'texture> {
+impl<'font, 's, 'texture> Slide<'font, 's, 'texture> {
     pub(crate) fn blank() -> Self {
         Slide {
             components: Vec::new(),
@@ -26,9 +26,15 @@ impl<'font, 'texture> Slide<'font, 'texture> {
         ));
         self
     }
+
+    pub(crate) fn add_image(mut self, desc: ImageDescription<'s, 'texture>) -> Self {
+        self.components
+            .push(Component::image(desc.sprite, desc.position, desc.shader));
+        self
+    }
 }
 
-impl<'font, 'texture> Renderable for Slide<'font, 'texture> {
+impl<'font, 's, 'texture> Renderable for Slide<'font, 's, 'texture> {
     fn draw<T>(&self, target: &mut T)
     where
         T: RenderTarget,
@@ -39,7 +45,7 @@ impl<'font, 'texture> Renderable for Slide<'font, 'texture> {
     }
 }
 
-impl<'font, 'texture> Updateable for Slide<'font, 'texture> {
+impl<'font, 's, 'texture> Updateable for Slide<'font, 's, 'texture> {
     fn update(&mut self, time: f32, resolution: Vector2u) {
         for component in self.components.iter_mut() {
             component.update(time, resolution);
