@@ -44,6 +44,8 @@ fn main() {
     /* Create slideshow */
     let mut slideshow = Slideshow::new();
     slideshow.add(Slide::blank().add_text("Hello world", &fonts["sansation"], 84, (0.5, 0.5)));
+    slideshow.add(Slide::blank().add_text("Second slide", &fonts["sansation"], 84, (0.3, 0.5)));
+    let n_slides = slideshow.len();
 
     let mut clock = Clock::start();
 
@@ -52,10 +54,33 @@ fn main() {
         /* Handle events */
         while let Some(event) = window.poll_event() {
             match event {
+                /* Quit */
                 Event::Closed
                 | Event::KeyPressed {
                     code: Key::Escape, ..
-                } => return,
+                }
+                | Event::KeyPressed { code: Key::Q, .. } => return,
+
+                /* Next slide */
+                Event::KeyPressed { code: Key::N, .. }
+                | Event::KeyPressed {
+                    code: Key::Space, ..
+                } => {
+                    slideshow.current_slide = (slideshow.current_slide + 1).min(n_slides - 1);
+                }
+
+                /* Previous slide */
+                Event::KeyPressed { code: Key::P, .. }
+                | Event::KeyPressed {
+                    code: Key::BackSpace,
+                    ..
+                } => {
+                    if let Some(value) = slideshow.current_slide.checked_sub(1) {
+                        slideshow.current_slide = value;
+                    }
+                }
+
+                /* Fullscreen mode */
                 Event::KeyPressed { code: Key::F, .. } => {
                     fullscreen = !fullscreen;
                     let (new_mode, new_style) = if fullscreen {

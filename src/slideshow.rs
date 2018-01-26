@@ -16,4 +16,8 @@ impl<'font> Slideshow<'font> {
     pub(crate) fn add(&mut self, slide: Slide<'font>) {
         self.slides.push(slide);
     }
+
+    pub(crate) fn len(&self) -> usize {
+        self.slides.len()
+    }
 }
