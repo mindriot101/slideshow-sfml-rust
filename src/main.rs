@@ -1,6 +1,5 @@
 extern crate sfml;
 
-use std::collections::HashMap;
 use sfml::system::Clock;
 use sfml::graphics::{Color, Font, RenderTarget, RenderWindow, Shader, Sprite, Text, Texture,
                      Transformable};
@@ -33,11 +32,7 @@ impl<'s> OriginReset for Sprite<'s> {
 
 fn main() {
     /* Load resources */
-    let mut fonts = HashMap::new();
-    fonts.insert(
-        "sansation",
-        Font::from_file("run_tree/fonts/sansation.ttf").unwrap(),
-    );
+    let font = Font::from_file("run_tree/fonts/sansation.ttf").unwrap();
     let green_shader = Shader::from_file(None, None, Some("run_tree/shaders/green.glslf"))
         .expect("loading green shader");
 
@@ -61,7 +56,7 @@ fn main() {
     slideshow.add(
         Slide::with_background(Color::RED).add_text(TextDescription {
             text: "Hello world".to_string(),
-            font: &fonts["sansation"],
+            font: &font,
             size: 84,
             position: (0.5, 0.5),
             shader: None,
@@ -69,7 +64,7 @@ fn main() {
     );
     slideshow.add(Slide::blank().add_text(TextDescription {
         text: "Second slide".to_string(),
-        font: &fonts["sansation"],
+        font: &font,
         size: 26,
         position: (0.3, 0.5),
         shader: None,
