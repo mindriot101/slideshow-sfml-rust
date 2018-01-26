@@ -1,0 +1,7 @@
+[package]
+authors = ["Simon Walker <s.r.walker101@googlemail.com>"]
+name = "slideshow-sfml-rust"
+version = "0.1.0"
+
+[dependencies]
+sfml = "0.14.0"
