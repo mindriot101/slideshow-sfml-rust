@@ -2,7 +2,7 @@ extern crate sfml;
 
 use std::collections::HashMap;
 use sfml::system::Clock;
-use sfml::graphics::{Color, Font, RenderTarget, RenderWindow, Text, Transformable};
+use sfml::graphics::{Color, Font, RenderTarget, RenderWindow, Shader, Text, Transformable};
 use sfml::window::{Event, Key, Style, VideoMode};
 
 pub(crate) mod traits;
@@ -28,6 +28,8 @@ fn main() {
         "sansation",
         Font::from_file("run_tree/fonts/sansation.ttf").unwrap(),
     );
+    let green_shader = Shader::from_file(None, None, Some("run_tree/shaders/green.glslf"))
+        .expect("loading green shader");
 
     let resolution = (1280, 720);
 
@@ -43,7 +45,11 @@ fn main() {
 
     /* Create slideshow */
     let mut slideshow = Slideshow::new();
-    slideshow.add(Slide::blank().add_text("Hello world", &fonts["sansation"], 84, (0.5, 0.5)));
+    slideshow.add(
+        Slide::blank()
+            .add_text("Hello world", &fonts["sansation"], 84, (0.5, 0.5))
+            .with_shader(&green_shader),
+    );
     slideshow.add(Slide::blank().add_text("Second slide", &fonts["sansation"], 84, (0.3, 0.5)));
     let n_slides = slideshow.len();
 

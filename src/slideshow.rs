@@ -1,11 +1,11 @@
 use slide::Slide;
 
-pub(crate) struct Slideshow<'font> {
+pub(crate) struct Slideshow<'font, 'texture> {
     pub(crate) current_slide: usize,
-    pub(crate) slides: Vec<Slide<'font>>,
+    pub(crate) slides: Vec<Slide<'font, 'texture>>,
 }
 
-impl<'font> Slideshow<'font> {
+impl<'font, 'texture> Slideshow<'font, 'texture> {
     pub(crate) fn new() -> Self {
         Slideshow {
             current_slide: 0,
@@ -13,7 +13,7 @@ impl<'font> Slideshow<'font> {
         }
     }
 
-    pub(crate) fn add(&mut self, slide: Slide<'font>) {
+    pub(crate) fn add(&mut self, slide: Slide<'font, 'texture>) {
         self.slides.push(slide);
     }
 
