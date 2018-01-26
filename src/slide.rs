@@ -44,13 +44,13 @@ impl<'font, 's, 'texture> Slide<'font, 's, 'texture> {
 }
 
 impl<'font, 's, 'texture> Renderable for Slide<'font, 's, 'texture> {
-    fn draw<T>(&self, target: &mut T)
+    fn draw<T>(&mut self, target: &mut T, dt: f32, elapsed: f32)
     where
         T: RenderTarget,
     {
         target.clear(&self.background_colour);
-        for component in &self.components {
-            component.draw(target);
+        for component in self.components.iter_mut() {
+            component.draw(target, dt, elapsed);
         }
     }
 }

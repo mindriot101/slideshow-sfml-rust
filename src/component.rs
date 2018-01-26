@@ -68,14 +68,14 @@ impl<'font, 's, 'texture> Updateable for Component<'font, 's, 'texture> {
 }
 
 impl<'font, 's, 'texture> Renderable for Component<'font, 's, 'texture> {
-    fn draw<T>(&self, target: &mut T)
+    fn draw<T>(&mut self, target: &mut T, _dt: f32, _elapsed: f32)
     where
         T: RenderTarget,
     {
         match self.component_type {
             ComponentType::TextComponent(ref text) => {
                 let mut states = RenderStates::default();
-                states.shader = self.shader;
+                states.shader = self.shader.clone();
                 target.draw_with_renderstates(text, states);
             }
             ComponentType::ImageComponent(ref sprite) => {

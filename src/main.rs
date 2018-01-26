@@ -35,7 +35,6 @@ fn main() {
     let font = Font::from_file("run_tree/fonts/sansation.ttf").unwrap();
     let green_shader = Shader::from_file(None, None, Some("run_tree/shaders/green.glslf"))
         .expect("loading green shader");
-
     let texture = Texture::from_file("run_tree/images/frank.jpeg").unwrap();
     let sprite = Sprite::with_texture(&texture);
 
@@ -135,11 +134,12 @@ fn main() {
         match slideshow.slides.get_mut(slideshow.current_slide) {
             Some(slide) => {
                 /* Check for updates */
-                let dt = clock.restart();
-                slide.update(dt.as_seconds(), window.size());
+                let t = clock.elapsed_time().as_seconds();
+                let dt = clock.restart().as_seconds();
+                slide.update(dt, window.size());
 
                 /* Render the current slide */
-                slide.draw(&mut window);
+                slide.draw(&mut window, dt, t);
                 window.display();
             }
             None => panic!("cannot get current slide"),

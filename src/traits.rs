@@ -6,7 +6,7 @@ pub(crate) trait Updateable {
 }
 
 pub(crate) trait Renderable {
-    fn draw<T>(&self, target: &mut T)
+    fn draw<T>(&mut self, target: &mut T, dt: f32, elapsed: f32)
     where
         T: RenderTarget;
 }
