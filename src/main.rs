@@ -9,10 +9,12 @@ pub(crate) mod traits;
 pub(crate) mod slideshow;
 pub(crate) mod slide;
 pub(crate) mod component;
+pub(crate) mod description;
 
 use traits::{OriginReset, Renderable, Updateable};
 use slideshow::Slideshow;
 use slide::Slide;
+use description::TextDescription;
 
 impl<'font> OriginReset for Text<'font> {
     fn reset_origin(&mut self) {
@@ -45,12 +47,14 @@ fn main() {
 
     /* Create slideshow */
     let mut slideshow = Slideshow::new();
-    slideshow.add(
-        Slide::blank()
-            .add_text("Hello world", &fonts["sansation"], 84, (0.5, 0.5))
-            .with_shader(&green_shader),
-    );
-    slideshow.add(Slide::blank().add_text("Second slide", &fonts["sansation"], 84, (0.3, 0.5)));
+    slideshow.add(Slide::blank().add_text(TextDescription {
+        text: "Hello world".to_string(),
+        font: &fonts["sansation"],
+        size: 84,
+        position: (0.5, 0.5),
+        shader: Some(&green_shader),
+    }));
+    // slideshow.add(Slide::blank().add_text("Second slide", &fonts["sansation"], 84, (0.3, 0.5)));
     let n_slides = slideshow.len();
 
     let mut clock = Clock::start();

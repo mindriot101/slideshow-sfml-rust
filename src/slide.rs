@@ -1,6 +1,7 @@
 use component::Component;
 
 use traits::{Renderable, Updateable};
+use description::TextDescription;
 use sfml::graphics::{Font, RenderTarget, Shader};
 use sfml::system::Vector2u;
 
@@ -15,19 +16,14 @@ impl<'font, 'texture> Slide<'font, 'texture> {
         }
     }
 
-    pub(crate) fn add_text(
-        mut self,
-        text: &str,
-        font: &'font Font,
-        size: usize,
-        position: (f32, f32),
-    ) -> Self {
-        self.components
-            .push(Component::text(text, font, size, position));
-        self
-    }
-
-    pub(crate) fn with_shader(mut self, shader: &Shader) -> Self {
+    pub(crate) fn add_text(mut self, desc: TextDescription<'font, 'texture>) -> Self {
+        self.components.push(Component::text(
+            desc.text,
+            desc.font,
+            desc.size,
+            desc.position,
+            desc.shader,
+        ));
         self
     }
 }

@@ -1,6 +1,6 @@
 use traits::{OriginReset, Renderable, Updateable};
 use sfml::system::Vector2u;
-use sfml::graphics::{Font, RenderTarget, Shader, Text, Transformable};
+use sfml::graphics::{Font, RenderStates, RenderTarget, Shader, Text, Transformable};
 
 pub(crate) enum ComponentType<'font> {
     TextComponent(Text<'font>),
@@ -9,17 +9,23 @@ pub(crate) enum ComponentType<'font> {
 pub(crate) struct Component<'font, 'texture> {
     relative_position: (f32, f32),
     component_type: ComponentType<'font>,
-    shader: Option<Shader<'texture>>,
+    shader: Option<&'texture Shader<'texture>>,
 }
 
 impl<'font, 'texture> Component<'font, 'texture> {
-    pub(crate) fn text(text_s: &str, font: &'font Font, size: usize, position: (f32, f32)) -> Self {
-        let mut text = Text::new(text_s, font, size as _);
+    pub(crate) fn text(
+        text_s: String,
+        font: &'font Font,
+        size: usize,
+        position: (f32, f32),
+        shader: Option<&'texture Shader<'texture>>,
+    ) -> Self {
+        let mut text = Text::new(&text_s, font, size as _);
         text.reset_origin();
         Component {
             relative_position: position,
             component_type: ComponentType::TextComponent(text),
-            shader: None,
+            shader: shader,
         }
     }
 }
@@ -31,7 +37,9 @@ impl<'font, 'texture> Renderable for Component<'font, 'texture> {
     {
         match self.component_type {
             ComponentType::TextComponent(ref text) => {
-                target.draw(text);
+                let mut states = RenderStates::default();
+                states.shader = self.shader;
+                target.draw_with_renderstates(text, states);
             }
         }
     }
