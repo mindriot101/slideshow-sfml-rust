@@ -80,7 +80,6 @@ impl<'font, 's, 'texture> Renderable for Component<'font, 's, 'texture> {
             }
             ComponentType::ImageComponent(ref sprite) => {
                 let mut states = RenderStates::default();
-                println!("{:?}", self.shader);
                 states.shader = self.shader;
                 target.draw_with_renderstates(sprite, states);
             }
